@@ -1,0 +1,138 @@
+@model WebApp.ViewModels.ProductIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Toodete kataloog</h1>
+
+<p>
+    <a asp-action="Create" class="button button2">Lisa uus toode</a>
+    <a asp-controller="ProductsGenerator" asp-action="Create" style="float: right" class="button button2">Genereeri tooteid</a>
+</p>
+<p>
+    <a asp-controller="Products" asp-action="DeleteAll" style="float: right" class="button button3">Kustuta kõik</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+
+        </th>
+        <th>
+            Tootekood
+        </th>
+        <th>
+            Nimetus
+        </th>
+        <th>
+            Hind
+        </th>
+        <th>
+            Toote seisundi liik
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Products)
+    {
+        <tr>
+            <td>
+                <a href="/Products/Details/@item.ProductId">
+                    @{
+                        if (item.PictureUrls.Count > 0)
+                        {
+                            var picture = Model
+                                .Products
+                                .First(x => x.ProductId == item.ProductId)
+                                .PictureUrls
+                                .First();
+                            <img src="@picture" height="50" width="50" asp-append-version="true" alt=""/>
+                        }
+                    }
+                </a>
+            </td>
+            <td style="vertical-align: center">
+                @Html.DisplayFor(modelItem => item.ProductCode)
+            </td>
+            <td style="vertical-align: center">
+                <a style="text-decoration: none; font-weight: bold; color: #2B2D2F" href="/Products/Details/@item.ProductId">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </a>
+            </td>
+            <td style="vertical-align: center">
+                @Html.DisplayFor(modelItem => item.Price) €
+            </td>
+            <td style="vertical-align: center">
+                @Html.DisplayFor(modelItem => item.ProductStateType.Title)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.ProductId">Vaata</a> |
+                <a asp-action="Edit" asp-route-id="@item.ProductId">Muuda</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProductId">Kustuta</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div style="position: absolute; bottom: 50px">
+    <a asp-action="Index" asp-route-page="@GetPreviousPage()">Eelmine</a> | @Model.Page |
+    <a asp-action="Index" asp-route-page="@GetNextPage()">Järgmine</a>
+</div>
+
+@{
+    int GetNextPage()
+    {
+        return Model.Page + 1;
+    }
+
+    int GetPreviousPage()
+    {
+        if (Model.Page <= 1)
+        {
+            return 1;
+        }
+        return Model.Page - 1;
+    }
+}
+
+<style>
+.button {
+  background-color: white;
+  color: black;
+  padding: 6px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 2px 1px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.button2 {
+  background-color: #0492C2;
+  color: white; 
+  border: none;
+}
+
+.button2:hover {
+  background-color: #89CFF0; 
+  color: white;
+  text-decoration: none;
+}
+
+.button3 {
+  background-color: #B22222;
+  color: white; 
+  border: none;
+}
+
+.button3:hover {
+  background-color: #F08080; 
+  color: white;
+    text-decoration: none;
+}
+</style>

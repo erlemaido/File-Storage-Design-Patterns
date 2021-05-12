@@ -1,0 +1,58 @@
+@model WebApp.ViewModels.ProductViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Toodete generaator</h1>
+
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="ProductCode" class="form-control" value="A" type="hidden"/>
+            </div>
+            <div class="form-group">
+                <input asp-for="Title" class="form-control" value="A" type="hidden"/>
+            </div>
+            <div class="form-group">
+                <input asp-for="Price" class="form-control" type="hidden" value="0.00"/>
+            </div>
+            <div class="form-group">
+                <input asp-for="ProductStateTypeCode" class="form-control" value="1" type="hidden"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="PictureFiles" class="control-label"></label>
+                <div class="custom-file">
+                    <input asp-for="PictureFiles" class="custom-file-input" id="customFile" multiple>
+                    <label class="custom-file-label" for="customFile">Vali fail(id)</label>
+                </div>
+                <span asp-validation-for="PictureFiles" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberOfItems" class="control-label"></label>
+                <input asp-for="NumberOfItems" class="form-control" min="0">
+                <span asp-validation-for="NumberOfItems" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Genereeri" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Products" asp-action="Index">Tagasi</a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script type="text/javascript">  
+            $(".custom-file-input").on("change", function () {  
+                const fileName = $(this).val().split("\\").pop();  
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);  
+            });  
+        </script>
+}

@@ -1,0 +1,73 @@
+@model WebApp.ViewModels.ProductViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Muuda</h1>
+
+<h4>Toode</h4>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductId"/>
+            <div class="form-group">
+                <label asp-for="ProductCode" class="control-label"></label> *
+                <input asp-for="ProductCode" class="form-control"/>
+                <span asp-validation-for="ProductCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label> *
+                <input asp-for="Title" class="form-control"/>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label> <span style="font-style: italic">(sh km, €) *</span>
+                <input asp-for="Price" class="form-control" type="number" min="0"/>
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductStateTypeCode" class="control-label"></label>
+                <select asp-for="ProductStateTypeCode" class="form-control" asp-items="ViewBag.ProductStateTypeCode"></select>
+                <span asp-validation-for="ProductStateTypeCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PictureFiles" class="control-label"></label>
+                <div class="custom-file">
+                    <input asp-for="PictureFiles" class="custom-file-input" id="customFile" multiple>
+                    <label class="custom-file-label" for="customFile">Vali fail(id)</label>
+                </div>
+                <span asp-validation-for="PictureFiles" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Salvesta" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<dt>
+    @{
+        var pictures = Model.PictureUrls;
+        @foreach (var picture in pictures)
+        {
+            <img src="~/images/@Model.ProductCode/@picture" height="300" width="300" asp-append-version="true" alt=""/>
+        }
+    }
+</dt>
+
+<div>
+    <a asp-action="Index">Tagasi</a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script type="text/javascript">  
+            $(".custom-file-input").on("change", function () {  
+                const fileName = $(this).val().split("\\").pop();  
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);  
+            });  
+        </script>
+}
