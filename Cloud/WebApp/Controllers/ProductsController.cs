@@ -245,7 +245,7 @@ namespace WebApp.Controllers
                         {
                             SeqNr = i + productPicturesSize,
                             ProductId = productViewModel.ProductId,
-                            PictureUrl = pictureUrl.Result
+                            PictureUrl = pictureUrl
                         };
                         return productPicture;
                     }).ToList()
