@@ -13,7 +13,6 @@ namespace WebApp.Services
         private readonly AmazonS3Client _s3Client;
         private const string BucketName = "cloud-photo-storage";
         private const string FolderName = "assets";
-        private const double Duration = 24;
 
         public S3StorageService()
         {
@@ -26,7 +25,7 @@ namespace WebApp.Services
 
         public async Task<string> AddItem(IFormFile file, string subFolderName)
         {
-            var fileName = file.FileName;
+            var fileName = Guid.NewGuid() + "_" + file.FileName;
             var objectKey = $"{FolderName}/{subFolderName}/{fileName}";
             
             await using var ms = new MemoryStream();
@@ -42,21 +41,7 @@ namespace WebApp.Services
 
             await _s3Client.PutObjectAsync(putObjectRequest);
 
-            return GeneratePreSignedUrl(objectKey);
-        }
-
-        private string GeneratePreSignedUrl(string objectKey)
-        {
-            var request = new GetPreSignedUrlRequest
-            {
-                BucketName = BucketName,
-                Key = objectKey,
-                Verb = HttpVerb.GET,
-                Expires = DateTime.UtcNow.AddHours(Duration)
-            };
-
-            var url = _s3Client.GetPreSignedURL(request);
-            return url;
+            return fileName;
         }
     }
 }

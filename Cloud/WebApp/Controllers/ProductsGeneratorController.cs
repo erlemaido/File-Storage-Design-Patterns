@@ -101,10 +101,10 @@ namespace WebApp.Controllers
                     var randomPictureIndex = GetRandomNumberFromArray(allPossiblePics.Count, unusedIndices);
                     unusedIndices = unusedIndices.Where(x => !x.Equals(randomPictureIndex)).ToArray();
                     var picture = allPossiblePics[randomPictureIndex];
-                    var pictureUrl = S3StorageService.AddItem(picture, product.ProductCode).Result;
+                    var pictureUrl = S3StorageService.AddItem(picture, product.ProductCode);
                     productPictures.Add(new ProductPicture()
                     {
-                        PictureUrl = pictureUrl,
+                        PictureUrl = pictureUrl.Result,
                         Product = product,
                         SeqNr = Convert.ToInt32(i) + 1
                     });

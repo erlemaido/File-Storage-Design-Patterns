@@ -43,12 +43,13 @@
                     @{
                         if (item.PictureUrls.Count > 0)
                         {
-                            var picture = Model
+                            var productModel = Model
                                 .Products
-                                .First(x => x.ProductId == item.ProductId)
+                                .First(x => x.ProductId == item.ProductId);
+                            var picture = productModel
                                 .PictureUrls
                                 .First();
-                            <img src="@picture" height="50" width="50" asp-append-version="true" alt=""/>
+                            <img src="https://cloud-photo-storage.s3-accelerate.amazonaws.com/assets/@productModel.ProductCode/@picture" height="50" width="50" asp-append-version="true" alt=""/>
                         }
                     }
                 </a>

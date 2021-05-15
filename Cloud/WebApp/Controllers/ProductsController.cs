@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon;
-using Amazon.S3;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -242,12 +240,12 @@ namespace WebApp.Controllers
                             .ToList().Count;
 
                         var s3StorageService = new S3StorageService();
-                        var pictureUrl = s3StorageService.AddItem(p, productViewModel.ProductCode).Result;
+                        var pictureUrl = s3StorageService.AddItem(p, productViewModel.ProductCode);
                         var productPicture = new ProductPicture
                         {
                             SeqNr = i + productPicturesSize,
                             ProductId = productViewModel.ProductId,
-                            PictureUrl = pictureUrl
+                            PictureUrl = pictureUrl.Result
                         };
                         return productPicture;
                     }).ToList()
