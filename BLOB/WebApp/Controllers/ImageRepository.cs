@@ -12,7 +12,7 @@ namespace WebApp.Controllers
         private readonly NpgsqlConnection _connection;
 
         private const string ConnectionString =
-            "Server=34.204.178.238;Port=5432;UserId=postgres;Password=erlemaido;Include Error Detail=true";
+            "Server=3.236.18.130;Port=5432;UserId=postgres;Password=erlemaido;Include Error Detail=true";
 
         public ImageRepository()
         {

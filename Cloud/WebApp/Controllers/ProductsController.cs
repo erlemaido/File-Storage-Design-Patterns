@@ -240,7 +240,7 @@ namespace WebApp.Controllers
                             .ToList().Count;
 
                         var s3StorageService = new S3StorageService();
-                        var pictureUrl = s3StorageService.AddItem(p, productViewModel.ProductCode);
+                        var pictureUrl = s3StorageService.AddItem(p, productViewModel.ProductCode).Result;
                         var productPicture = new ProductPicture
                         {
                             SeqNr = i + productPicturesSize,

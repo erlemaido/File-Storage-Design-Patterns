@@ -58,13 +58,13 @@ namespace WebApp.Controllers
             {
                 Console.WriteLine("ADDING product nr: " + i);
                 var product = CreateRandomProduct(Convert.ToInt32(i));
-                Console.WriteLine("ADDING pictures for product nr: " + i);
-                AddRandomProductPictures(allPossiblePics, product);
-                Console.WriteLine("DONE with adding pictures for product nr: " + i);
+
 
                 if (allPossiblePics != null && allPossiblePics.Any())
                 {
+                    Console.WriteLine("ADDING pictures for product nr: " + i);
                     AddRandomProductPictures(allPossiblePics, product);
+                    Console.WriteLine("DONE with adding pictures for product nr: " + i);
                 }
                 
                 try
@@ -101,7 +101,7 @@ namespace WebApp.Controllers
                     var randomPictureIndex = GetRandomNumberFromArray(allPossiblePics.Count, unusedIndices);
                     unusedIndices = unusedIndices.Where(x => !x.Equals(randomPictureIndex)).ToArray();
                     var picture = allPossiblePics[randomPictureIndex];
-                    var pictureUrl = S3StorageService.AddItem(picture, product.ProductCode);
+                    var pictureUrl = S3StorageService.AddItem(picture, product.ProductCode).Result;
                     productPictures.Add(new ProductPicture
                     {
                         PictureUrl = pictureUrl,

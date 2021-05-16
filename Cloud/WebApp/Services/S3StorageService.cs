@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -17,26 +18,28 @@ namespace WebApp.Services
         {
             _s3Client = new AmazonS3Client(new AmazonS3Config
             {
-                RegionEndpoint = RegionEndpoint.USEast1
+                RegionEndpoint = RegionEndpoint.USEast1,
+                UseAccelerateEndpoint = true
             });
         }
 
-        public string AddItem(IFormFile file, string subFolderName)
+        public async Task<string> AddItem(IFormFile file, string subFolderName)
         {
             var fileName = Guid.NewGuid() + "_" + file.FileName;
             var objectKey = $"{FolderName}/{subFolderName}/{fileName}";
             
-            using var ms = new MemoryStream();
-            file.CopyTo(ms);
+            await using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
             
             var putObjectRequest = new PutObjectRequest
             {
                 BucketName = BucketName,
                 Key = objectKey,
-                ContentType = file.ContentType
+                ContentType = file.ContentType,
+                InputStream = ms
             };
 
-            _s3Client.PutObjectAsync(putObjectRequest);
+            await _s3Client.PutObjectAsync(putObjectRequest);
             
             return fileName;
         }
