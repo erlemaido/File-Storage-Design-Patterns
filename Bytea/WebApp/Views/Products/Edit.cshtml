@@ -42,17 +42,17 @@
                 <span asp-validation-for="PictureFiles" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <table>
+                <table style="margin-top: 50px">
                     @{
                         var productPictures = Model.ProductPictures;
                         @foreach (var productPicture in productPictures)
                         {
                             <tr>
                                 <td>
-                                    <img src="@GetImage(productPicture.Picture)" height="150" width="150" asp-append-version="true" alt="" style="margin-right: 100px; margin-bottom: 20px"/>
+                                    <img src="@GetImage(productPicture.Picture)" height="200" width="200" asp-append-version="true" alt="" style="margin-right: 50px; margin-bottom: 20px"/>
                                 </td>
                                 <td>
-                                    <a asp-action="DeletePicture" asp-route-id="@productPicture.ProductPictureId">Eemalda</a>
+                                    <a asp-action="DeletePicture" asp-route-id="@productPicture.ProductPictureId" class="btn btn-danger" style="height: 25px; width: 20px; padding: 0">X</a>
                                 </td>
 
                             </tr>
@@ -62,15 +62,15 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Salvesta" class="btn btn-primary"/>
+                <input type="submit" value="Salvesta" class="btn btn-primary" style="margin-top: 30px"/>
             </div>
         </form>
     </div>
 </div>
 
 
-<div>
-    <a asp-action="Index">Tagasi</a>
+<div style="margin-top: 30px">
+    <a asp-action="Index" style="color: #808080">Tagasi</a>
 </div>
 
 @section Scripts {

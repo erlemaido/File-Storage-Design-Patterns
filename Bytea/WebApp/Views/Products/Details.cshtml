@@ -34,21 +34,24 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ProductStateType.Title)
         </dd>
-        <dt>
+        <dt style="margin-top: 30px">
             @{
                 var pictures = Model.PictureBytes;
                 @foreach (var picture in pictures)
                 {
-                    <img src="@GetImage(picture)" height="300" width="300" asp-append-version="true" alt=""/>
+                    <img src="@GetImage(picture)" height="250" width="250" asp-append-version="true" alt="" style="margin: 10px"/>
                 }
             }
         </dt>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ProductId">Muuda</a> |
-    <a asp-action="Delete" asp-route-id="@Model.ProductId">Kustuta</a> |
-    <a asp-action="Index">Tagasi</a>
+    <a asp-action="Edit" asp-route-id="@Model.ProductId" class="btn btn-warning" style="color: white; margin-right: 10px">Muuda</a>
+    <a asp-action="Delete" asp-route-id="@Model.ProductId" class="btn btn-danger">Kustuta</a>
+</div>
+
+<div style="margin-top: 30px">
+    <a asp-action="Index" style="color: #808080">Tagasi</a>
 </div>
 
 @{

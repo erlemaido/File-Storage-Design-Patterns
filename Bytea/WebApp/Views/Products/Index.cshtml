@@ -68,17 +68,17 @@
                 @Html.DisplayFor(modelItem => item.ProductStateType.Title)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.ProductId">Vaata</a> |
-                <a asp-action="Edit" asp-route-id="@item.ProductId">Muuda</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductId">Kustuta</a>
+                <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-info" style="padding: 0 .4rem">Vaata</a>
+                <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-warning" style="padding: 0 .4rem; color: white">Muuda</a>
+                <a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-danger" style="padding: 0 .4rem">Kustuta</a>
             </td>
         </tr>
     }
     </tbody>
 </table>
 <div style="position: absolute; bottom: 50px">
-    <a asp-action="Index" asp-route-page="@GetPreviousPage()">Eelmine</a> | @Model.Page |
-    <a asp-action="Index" asp-route-page="@GetNextPage()">Järgmine</a>
+    <a asp-action="Index" asp-route-page="@GetPreviousPage()" style="color: #808080">Eelmine</a> | @Model.Page |
+    <a asp-action="Index" asp-route-page="@GetNextPage()" style="color: #808080">Järgmine</a>
 </div>
 
 @{
@@ -135,15 +135,4 @@
   text-decoration: none;
 }
 
-.button3 {
-  background-color: #B22222;
-  color: white; 
-  border: none;
-}
-
-.button3:hover {
-  background-color: #F08080; 
-  color: white;
-    text-decoration: none;
-}
 </style>
