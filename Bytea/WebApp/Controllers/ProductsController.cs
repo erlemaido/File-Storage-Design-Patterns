@@ -28,9 +28,9 @@ namespace WebApp.Controllers
         {
             var skip = (page - 1) * pageSize;
             var appDbContext = _context.Products
+                .OrderBy(x => x.Title)
                 .Skip(skip)
                 .Take(pageSize)
-                .OrderBy(x => x.Title)
                 .Include(p => p.ProductStateType)
                 .Include(p => p.ProductPictures);
 
@@ -127,18 +127,20 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            
+            var productPictures = _context.ProductPictures.Where(x => x.ProductId == id).ToList();
+            var updatedProduct = CreateProduct(productViewModel, productPictures);
 
-            var product = CreateProduct(productViewModel);
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(updatedProduct);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductId))
+                    if (!ProductExists(updatedProduct.ProductId))
                     {
                         return NotFound();
                     }
@@ -146,11 +148,11 @@ namespace WebApp.Controllers
                     throw;
                 }
 
-                return RedirectToAction(nameof(Details), new {id = product.ProductId});
+                return RedirectToAction(nameof(Details), new {id = updatedProduct.ProductId});
             }
 
             ViewData["ProductStateTypeCode"] = new SelectList(_context.ProductStatusTypes, "ProductStateTypeCode",
-                "Title", product.ProductStateTypeCode);
+                "Title", updatedProduct.ProductStateTypeCode);
             return View(productViewModel);
         }
 
@@ -186,7 +188,7 @@ namespace WebApp.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        
         public IActionResult DeleteAll()
         {
             _context.ProductPictures.RemoveRange(_context.ProductPictures);
@@ -195,6 +197,15 @@ namespace WebApp.Controllers
             ViewData["ProductStateTypeCode"] =
                 new SelectList(_context.ProductStatusTypes, "ProductStateTypeCode", "Title");
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult DeletePicture(long id)
+        {
+            var productPicture = _context.ProductPictures.Find(id);
+            _context.ProductPictures.Remove(productPicture);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Edit), new {id = productPicture.ProductId});
         }
 
         private bool ProductExists(int id)
@@ -219,13 +230,17 @@ namespace WebApp.Controllers
                 ProductId = product.ProductId,
                 ProductStateType = product.ProductStateType,
                 ProductStateTypeCode = product.ProductStateTypeCode,
-                PictureBytes = product.ProductPictures.Select(p => p.Picture).ToList()
+                PictureBytes = product.ProductPictures.Select(p => p.Picture).ToList(),
+                ProductPictures = product.ProductPictures
             };
             return viewModel;
         }
-
-        private Product CreateProduct(ProductViewModel productViewModel)
+        
+        
+        private static Product CreateProduct(ProductViewModel productViewModel, ICollection<ProductPicture> productPictures = null)
         {
+            productPictures = AddProductPictures(productViewModel, productPictures);
+
             var product = new Product()
             {
                 Title = productViewModel.Title,
@@ -234,26 +249,39 @@ namespace WebApp.Controllers
                 ProductCode = productViewModel.ProductCode,
                 ProductStateType = productViewModel.ProductStateType,
                 ProductStateTypeCode = productViewModel.ProductStateTypeCode,
-                ProductPictures = productViewModel.PictureFiles != null && productViewModel.PictureFiles.Count != 0
-                    ? productViewModel.PictureFiles.Select((p, i) =>
-                    {
-                        var productPicturesSize = _context.ProductPictures
-                            .Where(m => m.ProductId == productViewModel.ProductId)
-                            .ToList().Count;
-
-                        var bytes = ConvertToBytes(p);
-                        var productPicture = new ProductPicture
-                        {
-                            SeqNr = i + productPicturesSize,
-                            ProductId = productViewModel.ProductId,
-                            Picture = bytes.Result
-                        };
-                        return productPicture;
-                    }).ToList()
-                    : new List<ProductPicture>()
+                ProductPictures = productPictures
             };
             return product;
         }
+
+        private static ICollection<ProductPicture> AddProductPictures(ProductViewModel productViewModel, ICollection<ProductPicture> productPictures)
+        {
+            var maxSeqNr = 0;
+            if (productPictures != null && productPictures.Count != 0)
+            {
+                maxSeqNr = productPictures.Select(x => x.SeqNr).Max();
+            }
+
+            var pictureFiles = productViewModel.PictureFiles;
+            if (pictureFiles != null && pictureFiles.Count != 0)
+            {
+                for (var i = 0; i < pictureFiles.Count; i++)
+                {
+                    var bytes = ConvertToBytes(pictureFiles[i]);
+                    var productPicture = new ProductPicture
+                    {
+                        SeqNr = i + maxSeqNr + 1,
+                        ProductId = productViewModel.ProductId,
+                        Picture = bytes.Result
+                    };
+                    productPictures ??= new List<ProductPicture>();
+                    productPictures.Add(productPicture);
+                }
+            }
+
+            return productPictures;
+        }
+
 
         private static IEnumerable<ProductViewModel> CreateProductViewModels(IEnumerable<Product> list)
         {

@@ -46,8 +46,9 @@
     </dl>
 </div>
 <div>
-    @* <a asp-action="Edit" asp-route-id="@Model.ProductId">Muuda</a> | *@
-    <a asp-action="Index">Tagasi toodete nimekirja</a>
+    <a asp-action="Edit" asp-route-id="@Model.ProductId">Muuda</a> |
+    <a asp-action="Delete" asp-route-id="@Model.ProductId">Kustuta</a> |
+    <a asp-action="Index">Tagasi</a>
 </div>
 
 @{

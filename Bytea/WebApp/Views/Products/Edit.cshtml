@@ -41,6 +41,25 @@
                 </div>
                 <span asp-validation-for="PictureFiles" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <table>
+                    @{
+                        var productPictures = Model.ProductPictures;
+                        @foreach (var productPicture in productPictures)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@GetImage(productPicture.Picture)" height="150" width="150" asp-append-version="true" alt="" style="margin-right: 100px; margin-bottom: 20px"/>
+                                </td>
+                                <td>
+                                    <a asp-action="DeletePicture" asp-route-id="@productPicture.ProductPictureId">Eemalda</a>
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
 
             <div class="form-group">
                 <input type="submit" value="Salvesta" class="btn btn-primary"/>
@@ -48,15 +67,7 @@
         </form>
     </div>
 </div>
-<dt>
-    @{
-        var pictures = Model.PictureBytes;
-        @foreach (var picture in pictures)
-        {
-            <img src="@GetImage(picture)" height="300" width="300" asp-append-version="true" alt=""/>
-        }
-    }
-</dt>
+
 
 <div>
     <a asp-action="Index">Tagasi</a>
