@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,17 +25,27 @@ namespace WebApp.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index(int page = PageValue, int pageSize = PageSize)
+        public async Task<IActionResult> Index(string searchString, int page = PageValue, int pageSize = PageSize)
         {
             var skip = (page - 1) * pageSize;
-            var appDbContext = _context.Products
+
+            var products = from p in _context.Products
+                select p;
+            
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(s => s.Title.ToLower().Contains(searchString.ToLower()));
+            }
+
+            products = products
                 .OrderBy(x => x.Title)
                 .Skip(skip)
                 .Take(pageSize)
                 .Include(p => p.ProductStateType)
                 .Include(p => p.ProductPictures);
+            
 
-            var list = await appDbContext.ToListAsync();
+            var list = await products.ToListAsync();
             var view = new ProductIndexViewModel {Page = page, Products = CreateProductViewModels(list)};
 
             return View(view);

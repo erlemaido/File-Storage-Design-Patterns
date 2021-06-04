@@ -10,6 +10,14 @@
     <a asp-action="Create" class="button button2">Lisa uus toode</a>
     <a asp-controller="ProductsGenerator" asp-action="Create" style="float: right" class="button button2">Genereeri tooteid</a>
 </p>
+
+<form asp-controller="Products" asp-action="Index" method="get">
+    <p>
+        Kauba nimi: <input type="text" name="SearchString" />
+        <input type="submit" value="Otsi" />
+    </p>
+</form>
+
 @* <p> *@
 @*     <a asp-controller="Products" asp-action="DeleteAll" style="float: right" class="button button3">Kustuta kõik</a> *@
 @* </p> *@

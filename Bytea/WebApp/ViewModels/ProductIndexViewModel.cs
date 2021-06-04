@@ -7,5 +7,6 @@ namespace WebApp.ViewModels
         public IEnumerable<ProductViewModel> Products { get; set; }
 
         public int Page;
+        
     }
 }
