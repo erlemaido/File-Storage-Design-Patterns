@@ -1,3 +1,5 @@
+<b>Bachelor's thesis</b>
+
 Bakalaureusetöö <b>"Mõned failide salvestamise disainimustrid SQL-andmebaasi kasutavate andmebaasirakenduste jaoks" </b>
 raames tehtud rakendused disainilahenduste võrdlemiseks
 
